@@ -1,80 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="h-full">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LowFrame Minecraft Server</title>
+
+<title>LowFrame - Minecraft Server</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
+
 body{
-font-family:Arial;
-background:#0f172a;
+background:#0f2d1a;
 color:white;
-text-align:center;
-padding:40px;
+font-family:sans-serif;
+margin:0;
 }
 
-.card{
-background:#1e293b;
-padding:25px;
-border-radius:10px;
-max-width:600px;
+.section{
+max-width:700px;
 margin:auto;
-}
-
-h1{
-color:#4ade80;
-}
-
-table{
-width:100%;
-margin-top:20px;
-border-collapse:collapse;
-}
-
-td{
-padding:10px;
-border-bottom:1px solid #334155;
-}
-
-.player{
-display:inline-block;
-margin:8px;
-text-align:center;
-}
-
-.player img{
-width:40px;
-height:40px;
-image-rendering:pixelated;
+padding:40px;
 }
 
 .ip{
 cursor:pointer;
-color:#38bdf8;
+color:#4ade80;
 font-weight:bold;
 }
 
 .ip:hover{
 text-decoration:underline;
 }
+
+.player{
+display:flex;
+align-items:center;
+gap:6px;
+background:rgba(0,0,0,.3);
+padding:5px 8px;
+border-radius:6px;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<div class="card">
+<!-- SERVER INFO -->
 
-<h1>LowFrame Server</h1>
+<div class="section">
 
-<p>
-Server IP:
-<span class="ip" onclick="copyIP()">lowframe.modrinth.gg:14416</span>
-</p>
+<h1 style="font-size:48px;font-weight:bold;">LowFrame</h1>
+
+<p style="color:#86efac;margin-bottom:30px;">A survival minecraft server</p>
+
+<div>
+
+<p>Java IP</p>
+<p class="ip" onclick="copyIP()">lowframe.modrinth.gg:14416</p>
+
+</div>
+
+<br>
+
+<div>
+
+<p>Bedrock IP</p>
+<p>lowframe.modrinth.gg</p>
+
+</div>
+
+<br>
+
+<div>
+
+<p>Bedrock Port</p>
+<p>20580</p>
+
+</div>
 
 <p id="copyMessage"></p>
 
-<table>
+</div>
+
+
+<!-- SERVER STATUS (SCROLL DOWN) -->
+
+<div class="section">
+
+<h2 style="font-size:32px;font-weight:bold;">Server Status</h2>
+
+<table style="width:100%;margin-top:20px;">
+
 <tr>
 <td>Status</td>
 <td id="status">Checking...</td>
@@ -99,46 +119,65 @@ Server IP:
 <td>MOTD</td>
 <td id="motd">-</td>
 </tr>
+
 </table>
 
-<h3>Online Players</h3>
-<div id="playerList"></div>
+<h3 style="margin-top:25px;">Online Players</h3>
+
+<div id="playerList" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
 
 </div>
 
+
 <script>
 
-const SERVER_IP = "lowframe.modrinth.gg:14416"
+const SERVER_IP="lowframe.modrinth.gg:14416"
+
+function copyIP(){
+
+navigator.clipboard.writeText(SERVER_IP)
+
+document.getElementById("copyMessage").innerText="IP copied!"
+
+setTimeout(()=>{
+document.getElementById("copyMessage").innerText=""
+},2000)
+
+}
 
 async function updateServer(){
 
 try{
 
-const res = await fetch("https://api.mcsrvstat.us/2/" + SERVER_IP)
-const data = await res.json()
+const res=await fetch("https://api.mcsrvstat.us/2/"+SERVER_IP)
+
+const data=await res.json()
 
 if(data.online){
 
-document.getElementById("status").innerHTML="🟢 Online"
-document.getElementById("players").innerHTML=data.players.online+" / "+data.players.max
-document.getElementById("version").innerHTML=data.version
-document.getElementById("ping").innerHTML=data.debug.ping+" ms"
+document.getElementById("status").innerText="🟢 Online"
 
-if(data.motd && data.motd.clean){
-document.getElementById("motd").innerHTML=data.motd.clean.join("<br>")
-}
+document.getElementById("players").innerText=data.players.online+" / "+data.players.max
 
-if(data.players && data.players.list){
+document.getElementById("version").innerText=data.version
+
+document.getElementById("motd").innerText=data.motd.clean.join(" ")
+
+document.getElementById("ping").innerText=data.debug.ping+" ms"
+
+if(data.players.list){
 
 let html=""
 
 data.players.list.forEach(p=>{
+
 html+=`
 <div class="player">
-<img src="https://mc-heads.net/avatar/${p}">
-<div>${p}</div>
+<img src="https://mc-heads.net/avatar/${p}/24">
+<span>${p}</span>
 </div>
 `
+
 })
 
 document.getElementById("playerList").innerHTML=html
@@ -147,31 +186,15 @@ document.getElementById("playerList").innerHTML=html
 
 }else{
 
-document.getElementById("status").innerHTML="🔴 Offline"
-document.getElementById("players").innerHTML="-"
-document.getElementById("version").innerHTML="-"
-document.getElementById("ping").innerHTML="-"
-document.getElementById("motd").innerHTML="-"
+document.getElementById("status").innerText="🔴 Offline"
 
 }
 
-}catch(e){
+}catch{
 
-document.getElementById("status").innerHTML="Error connecting"
-
-}
+document.getElementById("status").innerText="Error"
 
 }
-
-function copyIP(){
-
-navigator.clipboard.writeText(SERVER_IP)
-
-document.getElementById("copyMessage").innerText="IP copied to clipboard!"
-
-setTimeout(()=>{
-document.getElementById("copyMessage").innerText=""
-},2000)
 
 }
 
