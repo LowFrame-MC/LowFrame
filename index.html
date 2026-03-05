@@ -7,141 +7,276 @@
 
 <title>LowFrame - Minecraft Server</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 
-body{
-background:#0f2d1a;
-color:white;
-font-family:sans-serif;
+html,body{
+height:100%;
 margin:0;
+scroll-behavior:smooth;
 }
 
-.section{
-max-width:700px;
-margin:auto;
-padding:40px;
+.font-display{
+font-family:'Lexend',sans-serif;
 }
 
-.ip{
-cursor:pointer;
-color:#4ade80;
-font-weight:bold;
+.font-mono{
+font-family:'Space Mono',monospace;
 }
 
-.ip:hover{
-text-decoration:underline;
+.app-wrapper{
+min-height:100%;
+width:100%;
+overflow-y:auto;
 }
 
-.player{
+.page{
+display:none;
+}
+
+.page.active{
 display:flex;
-align-items:center;
-gap:6px;
-background:rgba(0,0,0,.3);
-padding:5px 8px;
-border-radius:6px;
+}
+
+.grass-pattern{
+background:
+linear-gradient(135deg,#1a472a 25%,transparent 25%),
+linear-gradient(225deg,#1a472a 25%,transparent 25%),
+linear-gradient(45deg,#1a472a 25%,transparent 25%),
+linear-gradient(315deg,#1a472a 25%,#0f2d1a 25%);
+background-size:20px 20px;
+}
+
+.pixel-border{
+box-shadow:
+inset -4px -4px 0 rgba(0,0,0,.3),
+inset 4px 4px 0 rgba(255,255,255,.1);
+}
+
+.btn-minecraft{
+transition:.15s;
+}
+
+.btn-minecraft:hover{
+transform:translateY(-3px);
+}
+
+.player-head{
+image-rendering:pixelated;
+}
+
+.toast{
+position:fixed;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+background:black;
+color:white;
+padding:12px 20px;
+border-radius:8px;
+display:none;
 }
 
 </style>
 
 </head>
 
-<body>
+<body class="h-full">
 
-<!-- SERVER INFO -->
+<div class="app-wrapper grass-pattern text-white">
 
-<div class="section">
+<!-- HOME PAGE -->
+<div id="home-page" class="page active flex-col min-h-full">
 
-<h1 style="font-size:48px;font-weight:bold;">LowFrame</h1>
+<section class="flex-1 flex flex-col items-center justify-center px-6 py-20 relative">
 
-<p style="color:#86efac;margin-bottom:30px;">A survival minecraft server</p>
+<div class="text-center z-10 animate-fade-in">
+
+<img src="https://mc-heads.net/head/Steve/64"
+class="mx-auto mb-6 animate-float"/>
+
+<h1 class="font-display font-black text-6xl md:text-8xl"
+style="text-shadow:4px 4px 0 #0f2d1a">
+LowFrame
+</h1>
+
+<p class="font-display text-xl text-green-200 opacity-90 mb-16">
+a survival minecraft server.
+</p>
+
+<div class="flex flex-col md:flex-row gap-6 justify-center">
+
+<a href="https://discord.gg/EUTH5DjqVK"
+class="btn-minecraft px-10 py-5 bg-indigo-600 rounded-lg pixel-border font-bold">
+Join our Discord
+</a>
+
+<button onclick="showServerPage()"
+class="btn-minecraft px-10 py-5 bg-green-600 rounded-lg pixel-border font-bold">
+Join the Server
+</button>
+
+<button onclick="showTrailerMessage()"
+class="btn-minecraft px-10 py-5 bg-red-600 rounded-lg pixel-border font-bold">
+Trailer
+</button>
+
+</div>
+
+<div class="animate-bounce mt-10 text-green-400">
+↓ scroll down<br>
+<span class="text-xs opacity-60">server status</span>
+</div>
+
+</div>
+</section>
+
+<footer class="text-center py-6 opacity-50 text-sm">
+© 2026 LowFrame Server
+</footer>
+
+</div>
+
+<!-- SERVER PAGE -->
+<div id="server-page"
+class="page flex-col min-h-full items-center justify-center px-6 py-20">
+
+<div class="max-w-2xl w-full">
+
+<button onclick="showHomePage()"
+class="mb-10 bg-gray-800 px-6 py-3 rounded-lg">
+← Back
+</button>
+
+<div class="bg-black/40 backdrop-blur-lg pixel-border rounded-2xl p-10">
+
+<h2 class="font-display font-black text-4xl mb-8 text-center">
+"best survival minecraft server"
+</h2>
+
+<div class="space-y-6">
+
+<!-- IP BLOCKS -->
+
+<div class="bg-black/30 rounded-xl p-6 cursor-pointer"
+onclick="copyIP('lowframe.modrinth.gg:14416')">
+
+<p class="text-green-400 text-sm mb-2">Java IP</p>
+
+<p class="font-mono text-2xl">lowframe.modrinth.gg:14416</p>
+
+</div>
+
+<div class="bg-black/30 rounded-xl p-6 cursor-pointer"
+onclick="copyIP('lowframe.modrinth.gg')">
+
+<p class="text-green-400 text-sm mb-2">Bedrock IP</p>
+
+<p class="font-mono text-2xl">lowframe.modrinth.gg</p>
+
+</div>
+
+<div class="bg-black/30 rounded-xl p-6 cursor-pointer">
+
+<p class="text-green-400 text-sm mb-2">Bedrock Port</p>
+
+<p class="font-mono text-2xl">20580</p>
+
+</div>
+
+</div>
+
+<p class="mt-10 text-green-200 opacity-70 text-sm text-center">
+available on java and bedrock
+</p>
+
+</div>
+
+<!-- STATUS SECTION -->
+
+<div class="mt-20 bg-black/40 pixel-border rounded-2xl p-10">
+
+<h2 class="text-3xl font-bold mb-6 text-center">
+Server Status
+</h2>
+
+<div class="text-center space-y-3">
 
 <div>
-
-<p>Java IP</p>
-<p class="ip" onclick="copyIP()">lowframe.modrinth.gg:14416</p>
-
+Status:
+<span id="status">Checking...</span>
 </div>
-
-<br>
 
 <div>
-
-<p>Bedrock IP</p>
-<p>lowframe.modrinth.gg</p>
-
+Players:
+<span id="players">0</span> /
+<span id="maxplayers">0</span>
 </div>
-
-<br>
 
 <div>
+Version:
+<span id="version">...</span>
+</div>
 
-<p>Bedrock Port</p>
-<p>20580</p>
+<div>
+Ping:
+<span id="ping">...</span>
+</div>
+
+<div>
+MOTD:
+<span id="motd">...</span>
+</div>
 
 </div>
 
-<p id="copyMessage"></p>
+<h3 class="mt-8 mb-3 text-green-400 font-bold">
+Online Players
+</h3>
+
+<div id="playerlist"
+class="flex flex-wrap gap-3 justify-center">
+</div>
 
 </div>
 
-
-<!-- SERVER STATUS (SCROLL DOWN) -->
-
-<div class="section">
-
-<h2 style="font-size:32px;font-weight:bold;">Server Status</h2>
-
-<table style="width:100%;margin-top:20px;">
-
-<tr>
-<td>Status</td>
-<td id="status">Checking...</td>
-</tr>
-
-<tr>
-<td>Players</td>
-<td id="players">-</td>
-</tr>
-
-<tr>
-<td>Version</td>
-<td id="version">-</td>
-</tr>
-
-<tr>
-<td>Ping</td>
-<td id="ping">-</td>
-</tr>
-
-<tr>
-<td>MOTD</td>
-<td id="motd">-</td>
-</tr>
-
-</table>
-
-<h3 style="margin-top:25px;">Online Players</h3>
-
-<div id="playerList" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+</div>
+</div>
 
 </div>
 
+<div id="toast" class="toast"></div>
 
 <script>
 
-const SERVER_IP="lowframe.modrinth.gg:14416"
+const SERVER="lowframe.modrinth.gg:14416"
 
-function copyIP(){
+function showServerPage(){
+document.getElementById("home-page").classList.remove("active")
+document.getElementById("server-page").classList.add("active")
+}
 
-navigator.clipboard.writeText(SERVER_IP)
+function showHomePage(){
+document.getElementById("server-page").classList.remove("active")
+document.getElementById("home-page").classList.add("active")
+}
 
-document.getElementById("copyMessage").innerText="IP copied!"
+function showTrailerMessage(){
+window.open("https://www.youtube.com/watch?v=MiB9abBVawg","_blank")
+}
 
-setTimeout(()=>{
-document.getElementById("copyMessage").innerText=""
-},2000)
+function copyIP(text){
+
+navigator.clipboard.writeText(text)
+
+const toast=document.getElementById("toast")
+toast.innerText="Copied: "+text
+toast.style.display="block"
+
+setTimeout(()=>toast.style.display="none",2000)
 
 }
 
@@ -149,57 +284,48 @@ async function updateServer(){
 
 try{
 
-const res=await fetch("https://api.mcsrvstat.us/2/"+SERVER_IP)
-
+const res=await fetch("https://api.mcsrvstat.us/2/"+SERVER)
 const data=await res.json()
 
 if(data.online){
 
-document.getElementById("status").innerText="🟢 Online"
+status.innerText="🟢 Online"
+players.innerText=data.players.online
+maxplayers.innerText=data.players.max
+version.innerText=data.version
+ping.innerText=data.debug?.ping || "?"
 
-document.getElementById("players").innerText=data.players.online+" / "+data.players.max
-
-document.getElementById("version").innerText=data.version
-
-document.getElementById("motd").innerText=data.motd.clean.join(" ")
-
-document.getElementById("ping").innerText=data.debug.ping+" ms"
-
-if(data.players.list){
+motd.innerText=data.motd?.clean?.join(" ") || ""
 
 let html=""
 
-data.players.list.forEach(p=>{
+if(data.players?.list){
 
+data.players.list.forEach(p=>{
 html+=`
-<div class="player">
-<img src="https://mc-heads.net/avatar/${p}/24">
-<span>${p}</span>
+<div class="text-center">
+<img class="player-head w-10 h-10"
+src="https://mc-heads.net/avatar/${p}/40"/>
+<div class="text-xs">${p}</div>
 </div>
 `
-
 })
 
-document.getElementById("playerList").innerHTML=html
-
 }
+
+playerlist.innerHTML=html
 
 }else{
 
-document.getElementById("status").innerText="🔴 Offline"
+status.innerText="🔴 Offline"
 
 }
 
-}catch{
-
-document.getElementById("status").innerText="Error"
-
-}
+}catch{}
 
 }
 
 updateServer()
-
 setInterval(updateServer,30000)
 
 </script>
