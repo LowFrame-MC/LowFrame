@@ -1,334 +1,360 @@
 <!doctype html>
 <html lang="en" class="h-full">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>LowFrame - Minecraft Server</title>
-
-<script src="https://cdn.tailwindcss.com/3.4.17"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-
-html,body{
-height:100%;
-margin:0;
-scroll-behavior:smooth;
-}
-
-.font-display{
-font-family:'Lexend',sans-serif;
-}
-
-.font-mono{
-font-family:'Space Mono',monospace;
-}
-
-.app-wrapper{
-min-height:100%;
-width:100%;
-overflow-y:auto;
-}
-
-.page{
-display:none;
-}
-
-.page.active{
-display:flex;
-}
-
-.grass-pattern{
-background:
-linear-gradient(135deg,#1a472a 25%,transparent 25%),
-linear-gradient(225deg,#1a472a 25%,transparent 25%),
-linear-gradient(45deg,#1a472a 25%,transparent 25%),
-linear-gradient(315deg,#1a472a 25%,#0f2d1a 25%);
-background-size:20px 20px;
-}
-
-.pixel-border{
-box-shadow:
-inset -4px -4px 0 rgba(0,0,0,.3),
-inset 4px 4px 0 rgba(255,255,255,.1);
-}
-
-.btn-minecraft{
-transition:.15s;
-}
-
-.btn-minecraft:hover{
-transform:translateY(-3px);
-}
-
-.player-head{
-image-rendering:pixelated;
-}
-
-.toast{
-position:fixed;
-bottom:30px;
-left:50%;
-transform:translateX(-50%);
-background:black;
-color:white;
-padding:12px 20px;
-border-radius:8px;
-display:none;
-}
-
-</style>
-
-</head>
-
-<body class="h-full">
-
-<div class="app-wrapper grass-pattern text-white">
-
-<!-- HOME PAGE -->
-<div id="home-page" class="page active flex-col min-h-full">
-
-<section class="flex-1 flex flex-col items-center justify-center px-6 py-20 relative">
-
-<div class="text-center z-10 animate-fade-in">
-
-<img src="https://mc-heads.net/head/Steve/64"
-class="mx-auto mb-6 animate-float"/>
-
-<h1 class="font-display font-black text-6xl md:text-8xl"
-style="text-shadow:4px 4px 0 #0f2d1a">
-LowFrame
-</h1>
-
-<p class="font-display text-xl text-green-200 opacity-90 mb-16">
-a survival minecraft server.
-</p>
-
-<div class="flex flex-col md:flex-row gap-6 justify-center">
-
-<a href="https://discord.gg/EUTH5DjqVK"
-class="btn-minecraft px-10 py-5 bg-indigo-600 rounded-lg pixel-border font-bold">
-Join our Discord
-</a>
-
-<button onclick="showServerPage()"
-class="btn-minecraft px-10 py-5 bg-green-600 rounded-lg pixel-border font-bold">
-Join the Server
-</button>
-
-<button onclick="showTrailerMessage()"
-class="btn-minecraft px-10 py-5 bg-red-600 rounded-lg pixel-border font-bold">
-Trailer
-</button>
-
-</div>
-
-<div class="animate-bounce mt-10 text-green-400">
-↓ scroll down<br>
-<span class="text-xs opacity-60">server status</span>
-</div>
-
-</div>
-</section>
-
-<footer class="text-center py-6 opacity-50 text-sm">
-© 2026 LowFrame Server
-</footer>
-
-</div>
-
-<!-- SERVER PAGE -->
-<div id="server-page"
-class="page flex-col min-h-full items-center justify-center px-6 py-20">
-
-<div class="max-w-2xl w-full">
-
-<button onclick="showHomePage()"
-class="mb-10 bg-gray-800 px-6 py-3 rounded-lg">
-← Back
-</button>
-
-<div class="bg-black/40 backdrop-blur-lg pixel-border rounded-2xl p-10">
-
-<h2 class="font-display font-black text-4xl mb-8 text-center">
-"best survival minecraft server"
-</h2>
-
-<div class="space-y-6">
-
-<!-- IP BLOCKS -->
-
-<div class="bg-black/30 rounded-xl p-6 cursor-pointer"
-onclick="copyIP('lowframe.modrinth.gg:14416')">
-
-<p class="text-green-400 text-sm mb-2">Java IP</p>
-
-<p class="font-mono text-2xl">lowframe.modrinth.gg:14416</p>
-
-</div>
-
-<div class="bg-black/30 rounded-xl p-6 cursor-pointer"
-onclick="copyIP('lowframe.modrinth.gg')">
-
-<p class="text-green-400 text-sm mb-2">Bedrock IP</p>
-
-<p class="font-mono text-2xl">lowframe.modrinth.gg</p>
-
-</div>
-
-<div class="bg-black/30 rounded-xl p-6 cursor-pointer">
-
-<p class="text-green-400 text-sm mb-2">Bedrock Port</p>
-
-<p class="font-mono text-2xl">20580</p>
-
-</div>
-
-</div>
-
-<p class="mt-10 text-green-200 opacity-70 text-sm text-center">
-available on java and bedrock
-</p>
-
-</div>
-
-<!-- STATUS SECTION -->
-
-<div class="mt-20 bg-black/40 pixel-border rounded-2xl p-10">
-
-<h2 class="text-3xl font-bold mb-6 text-center">
-Server Status
-</h2>
-
-<div class="text-center space-y-3">
-
-<div>
-Status:
-<span id="status">Checking...</span>
-</div>
-
-<div>
-Players:
-<span id="players">0</span> /
-<span id="maxplayers">0</span>
-</div>
-
-<div>
-Version:
-<span id="version">...</span>
-</div>
-
-<div>
-Ping:
-<span id="ping">...</span>
-</div>
-
-<div>
-MOTD:
-<span id="motd">...</span>
-</div>
-
-</div>
-
-<h3 class="mt-8 mb-3 text-green-400 font-bold">
-Online Players
-</h3>
-
-<div id="playerlist"
-class="flex flex-wrap gap-3 justify-center">
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-
-<div id="toast" class="toast"></div>
-
-<script>
-
-const SERVER="lowframe.modrinth.gg:14416"
-
-function showServerPage(){
-document.getElementById("home-page").classList.remove("active")
-document.getElementById("server-page").classList.add("active")
-}
-
-function showHomePage(){
-document.getElementById("server-page").classList.remove("active")
-document.getElementById("home-page").classList.add("active")
-}
-
-function showTrailerMessage(){
-window.open("https://www.youtube.com/watch?v=MiB9abBVawg","_blank")
-}
-
-function copyIP(text){
-
-navigator.clipboard.writeText(text)
-
-const toast=document.getElementById("toast")
-toast.innerText="Copied: "+text
-toast.style.display="block"
-
-setTimeout(()=>toast.style.display="none",2000)
-
-}
-
-async function updateServer(){
-
-try{
-
-const res=await fetch("https://api.mcsrvstat.us/2/"+SERVER)
-const data=await res.json()
-
-if(data.online){
-
-status.innerText="🟢 Online"
-players.innerText=data.players.online
-maxplayers.innerText=data.players.max
-version.innerText=data.version
-ping.innerText=data.debug?.ping || "?"
-
-motd.innerText=data.motd?.clean?.join(" ") || ""
-
-let html=""
-
-if(data.players?.list){
-
-data.players.list.forEach(p=>{
-html+=`
-<div class="text-center">
-<img class="player-head w-10 h-10"
-src="https://mc-heads.net/avatar/${p}/40"/>
-<div class="text-xs">${p}</div>
-</div>
-`
-})
-
-}
-
-playerlist.innerHTML=html
-
-}else{
-
-status.innerText="🔴 Offline"
-
-}
-
-}catch{}
-
-}
-
-updateServer()
-setInterval(updateServer,30000)
-
-</script>
-
-</body>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LowFrame - Minecraft Server</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;900&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      scroll-behavior: smooth;
+    }
+    .font-display {
+      font-family: 'Lexend', sans-serif;
+    }
+    .font-mono-custom {
+      font-family: 'Space Mono', monospace;
+    }
+    .app-wrapper {
+      min-height: 100%;
+      width: 100%;
+      overflow-y: auto;
+    }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: flex;
+    }
+    .grass-pattern {
+      background:
+        linear-gradient(135deg, #1a472a 25%, transparent 25%),
+        linear-gradient(225deg, #1a472a 25%, transparent 25%),
+        linear-gradient(45deg, #1a472a 25%, transparent 25%),
+        linear-gradient(315deg, #1a472a 25%, #0f2d1a 25%);
+      background-size: 20px 20px;
+    }
+    .pixel-border {
+      box-shadow:
+        inset -4px -4px 0 rgba(0,0,0,.3),
+        inset 4px 4px 0 rgba(255,255,255,.1);
+    }
+    .btn-minecraft {
+      transition: .15s;
+    }
+    .btn-minecraft:hover {
+      transform: translateY(-3px);
+    }
+    .player-head {
+      image-rendering: pixelated;
+    }
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div class="app-wrapper grass-pattern text-white">
+   <!-- HOME PAGE -->
+   <div id="home-page" class="page active flex-col min-h-full">
+    <section class="flex-1 flex flex-col items-center justify-center px-6 py-20 relative">
+     <div class="text-center z-10 animate-fade-in">
+      <div class="mx-auto mb-6 w-16 h-16 bg-gradient-to-br from-amber-600 to-amber-800 rounded animate-float pixel-border"></div>
+      <h1 id="server-title" class="font-display font-black text-6xl md:text-8xl" style="text-shadow: 4px 4px 0 #0f2d1a">LowFrame</h1>
+      <p id="server-tagline" class="font-display text-xl text-green-200 opacity-90 mb-16">a survival minecraft server.</p>
+      <div class="flex flex-col md:flex-row gap-6 justify-center">
+       <a href="https://discord.gg/EUTH5DjqVK" target="_blank" rel="noopener noreferrer" class="btn-minecraft px-10 py-5 bg-indigo-600 rounded-lg pixel-border font-bold font-display"> Join our Discord </a> <button onclick="showServerPage()" class="btn-minecraft px-10 py-5 bg-green-600 rounded-lg pixel-border font-bold font-display"> Join the Server </button> <button onclick="showTrailerMessage()" class="btn-minecraft px-10 py-5 bg-red-600 rounded-lg pixel-border font-bold font-display"> Trailer </button>
+      </div>
+      <div class="animate-bounce mt-10 text-green-400">
+       ↓ scroll down<br><span class="text-xs opacity-60">server status</span>
+      </div>
+     </div>
+    </section><!-- STATUS PREVIEW ON HOME -->
+    <section class="px-6 pb-20">
+     <div class="max-w-2xl mx-auto bg-black/40 backdrop-blur-lg pixel-border rounded-2xl p-8">
+      <div class="flex items-center justify-between">
+       <div>
+        <h3 class="font-display font-bold text-2xl mb-2">Server Status</h3>
+        <p class="text-green-300 opacity-70">Check if we're online</p>
+       </div>
+       <div class="flex items-center gap-3">
+        <div class="status-dot bg-green-500"></div><span class="font-mono-custom text-green-400">Online</span>
+       </div>
+      </div>
+     </div>
+    </section>
+    <footer class="text-center py-6 opacity-50 text-sm font-display">
+     © 2026 LowFrame Server
+    </footer>
+   </div><!-- SERVER PAGE -->
+   <div id="server-page" class="page flex-col min-h-full items-center justify-center px-6 py-20">
+    <div class="max-w-2xl w-full">
+     <button onclick="showHomePage()" class="mb-10 bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded-lg font-display transition-colors"> ← Back </button>
+     <div class="bg-black/40 backdrop-blur-lg pixel-border rounded-2xl p-10">
+      <h2 class="font-display font-black text-4xl mb-8 text-center">"best survival minecraft server"</h2>
+      <div class="space-y-6">
+       <!-- Java IP -->
+       <div class="bg-black/30 rounded-xl p-6 cursor-pointer hover:bg-black/50 transition-colors" onclick="copyIP('lowframe.modrinth.gg:14416')">
+        <p class="text-green-400 text-sm mb-2 font-display">Java IP</p>
+        <p class="font-mono-custom text-2xl">lowframe.modrinth.gg:14416</p>
+        <p class="text-xs text-gray-400 mt-2">Click to copy</p>
+       </div><!-- Bedrock IP -->
+       <div class="bg-black/30 rounded-xl p-6 cursor-pointer hover:bg-black/50 transition-colors" onclick="copyIP('lowframe.modrinth.gg')">
+        <p class="text-green-400 text-sm mb-2 font-display">Bedrock IP</p>
+        <p class="font-mono-custom text-2xl">lowframe.modrinth.gg</p>
+        <p class="text-xs text-gray-400 mt-2">Click to copy</p>
+       </div><!-- Bedrock Port -->
+       <div class="bg-black/30 rounded-xl p-6 cursor-pointer hover:bg-black/50 transition-colors" onclick="copyIP('20580')">
+        <p class="text-green-400 text-sm mb-2 font-display">Bedrock Port</p>
+        <p class="font-mono-custom text-2xl">20580</p>
+        <p class="text-xs text-gray-400 mt-2">Click to copy</p>
+       </div>
+      </div>
+      <p class="mt-10 text-green-200 opacity-70 text-sm text-center font-display">available on java and bedrock</p>
+     </div><!-- STATUS SECTION -->
+     <div class="mt-10 bg-black/40 pixel-border rounded-2xl p-10">
+      <h2 class="text-3xl font-display font-bold mb-6 text-center">Server Status</h2>
+      <div id="status-container" class="space-y-6">
+       <div class="flex items-center justify-center gap-4">
+        <div class="status-dot bg-gray-500"></div><span class="font-mono-custom text-xl text-gray-400">Loading...</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Toast Notification -->
+  <div id="toast" class="toast font-display"></div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      server_name: 'LowFrame',
+      tagline: 'a survival minecraft server.',
+      background_color: '#0f2d1a',
+      text_color: '#ffffff',
+      accent_color: '#22c55e',
+      button_color: '#16a34a',
+      secondary_color: '#4f46e5'
+    };
+    
+    // Page navigation functions
+    function showServerPage() {
+      document.getElementById('home-page').classList.remove('active');
+      document.getElementById('server-page').classList.add('active');
+    }
+    
+    function showHomePage() {
+      document.getElementById('server-page').classList.remove('active');
+      document.getElementById('home-page').classList.add('active');
+    }
+    
+    // Copy IP to clipboard
+    function copyIP(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Copied: ' + text);
+      }).catch(() => {
+        showToast('Failed to copy');
+      });
+    }
+    
+    // Show trailer message
+    function showTrailerMessage() {
+      showToast('Trailer coming soon!');
+    }
+    
+    // Toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+    
+    // Fetch server status from API
+    async function fetchServerStatus() {
+      try {
+        const response = await fetch('https://api.mcsrvstat.us/2/lowframe.modrinth.gg:14416');
+        const data = await response.json();
+        updateStatusDisplay(data);
+      } catch (error) {
+        console.error('Failed to fetch server status:', error);
+        updateStatusError();
+      }
+    }
+    
+    // Update status display with server data
+    function updateStatusDisplay(data) {
+      const container = document.getElementById('status-container');
+      const online = data.online;
+      const motd = data.motd?.clean?.join(' ') || 'Welcome to LowFrame';
+      const players = data.players?.online || 0;
+      const maxPlayers = data.players?.max || 0;
+      const playerList = data.players?.list || [];
+      
+      let html = `
+        <div class="flex items-center justify-center gap-4 mb-6">
+          <div class="status-dot ${online ? 'bg-green-500' : 'bg-red-500'}"></div>
+          <span class="font-mono-custom text-xl ${online ? 'text-green-400' : 'text-red-400'}">
+            ${online ? 'Online' : 'Offline'}
+          </span>
+        </div>
+        
+        <div class="bg-black/30 rounded-xl p-6">
+          <p class="text-green-400 text-sm mb-2 font-display">MOTD</p>
+          <p class="font-display text-lg">${motd}</p>
+        </div>
+        
+        <div class="bg-black/30 rounded-xl p-6">
+          <p class="text-green-400 text-sm mb-4 font-display">Players Online</p>
+          <p class="font-mono-custom text-2xl text-green-300">${players}/${maxPlayers}</p>
+        </div>
+      `;
+      
+      if (playerList.length > 0) {
+        html += `
+          <div class="bg-black/30 rounded-xl p-6">
+            <p class="text-green-400 text-sm mb-4 font-display">Players</p>
+            <div class="flex flex-wrap gap-4">
+        `;
+        
+        playerList.slice(0, 10).forEach(player => {
+          html += `
+            <div class="flex flex-col items-center gap-2">
+              <img src="https://mc-heads.net/head/${player}/64" 
+                   alt="${player}" 
+                   class="w-12 h-12 rounded pixel-border"
+                   loading="lazy"
+                   onerror="this.style.background='#4b5563'; this.alt='${player} (avatar unavailable)';">
+              <span class="text-xs text-gray-300 text-center max-w-12 truncate">${player}</span>
+            </div>
+          `;
+        });
+        
+        if (playerList.length > 10) {
+          html += `<div class="flex items-center justify-center text-gray-400 text-sm">+${playerList.length - 10} more</div>`;
+        }
+        
+        html += `
+            </div>
+          </div>
+        `;
+      }
+      
+      container.innerHTML = html;
+    }
+    
+    // Show error state
+    function updateStatusError() {
+      const container = document.getElementById('status-container');
+      container.innerHTML = `
+        <div class="flex items-center justify-center gap-4">
+          <div class="status-dot bg-yellow-500"></div>
+          <span class="font-mono-custom text-xl text-yellow-400">Unable to load status</span>
+        </div>
+        <p class="text-center text-gray-400 text-sm">The server status could not be retrieved.</p>
+      `;
+    }
+    
+    // Load server status when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchServerStatus();
+      // Refresh status every 30 seconds
+      setInterval(fetchServerStatus, 30000);
+    });
+    
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig: defaultConfig,
+        onConfigChange: async (config) => {
+          const titleEl = document.getElementById('server-title');
+          const taglineEl = document.getElementById('server-tagline');
+          
+          if (titleEl) {
+            titleEl.textContent = config.server_name || defaultConfig.server_name;
+          }
+          if (taglineEl) {
+            taglineEl.textContent = config.tagline || defaultConfig.tagline;
+          }
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => window.elementSdk.setConfig({ background_color: value })
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            },
+            {
+              get: () => config.accent_color || defaultConfig.accent_color,
+              set: (value) => window.elementSdk.setConfig({ accent_color: value })
+            },
+            {
+              get: () => config.button_color || defaultConfig.button_color,
+              set: (value) => window.elementSdk.setConfig({ button_color: value })
+            },
+            {
+              get: () => config.secondary_color || defaultConfig.secondary_color,
+              set: (value) => window.elementSdk.setConfig({ secondary_color: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['server_name', config.server_name || defaultConfig.server_name],
+          ['tagline', config.tagline || defaultConfig.tagline]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d7c648d93f0e5e2',t:'MTc3Mjc0ODAxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
