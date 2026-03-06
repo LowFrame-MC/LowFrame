@@ -122,14 +122,7 @@ Trailer
 Join Server
 </button>
 
-<a href="https://discord.gg/N3E8mzwk" target="_blank"
-class="bg-indigo-600 px-8 py-4 rounded pixel-border">
-Join Discord
-</a>
-
 </div>
-
-<!-- STATUS -->
 
 <div class="grid md:grid-cols-3 gap-6 mb-12">
 
@@ -157,8 +150,6 @@ Join Discord
 
 </div>
 
-<!-- PLAYER MODAL -->
-
 <div id="player-modal" class="modal">
 <div class="modal-box">
 
@@ -174,8 +165,6 @@ Close
 
 </div>
 </div>
-
-<!-- TRAILER -->
 
 <div id="trailer-modal" class="modal">
 <div class="modal-box w-[600px]">
@@ -196,136 +185,8 @@ Close
 <div id="toast" class="toast"></div>
 
 <script>
-
-/* STAFF DATA */
-
-const staffData={
-"TheRealDwayne":{rank:"owner",joined:"2025-01-12",playtime:"120h"},
-"daduckmanyt":{rank:"coowner",joined:"2025-01-12",playtime:"95h"},
-"FramantedApple":{rank:"admin",joined:"2025-02-02",playtime:"80h"},
-"TheAmazingDoge":{rank:"admin",joined:"2025-02-08",playtime:"72h"}
-}
-
-/* UI */
-
-function toast(msg){
-const t=document.getElementById("toast")
-t.textContent=msg
-t.classList.add("show")
-setTimeout(()=>t.classList.remove("show"),2500)
-}
-
-function copyIP(){
-navigator.clipboard.writeText("lowframe.modrinth.gg:14416")
-toast("Copied Server IP")
-}
-
-/* TRAILER */
-
-function openTrailer(){
-document.getElementById("trailer-modal").style.display="flex"
-}
-
-function closeTrailer(){
-document.getElementById("trailer-modal").style.display="none"
-}
-
-/* PLAYER MODAL */
-
-function rankBadge(rank){
-if(rank==="owner") return '<span class="badge owner">OWNER</span>'
-if(rank==="coowner") return '<span class="badge coowner">CO-OWNER</span>'
-if(rank==="admin") return '<span class="badge admin">ADMIN</span>'
-return ""
-}
-
-function openPlayer(name){
-
-const data=staffData[name]||{
-joined:"Unknown",
-playtime:"Unknown",
-rank:""
-}
-
-document.getElementById("modal-name").textContent=name
-document.getElementById("modal-join").textContent=data.joined
-document.getElementById("modal-time").textContent=data.playtime
-document.getElementById("modal-badge").innerHTML=rankBadge(data.rank)
-
-document.getElementById("player-modal").style.display="flex"
-}
-
-function closeModal(){
-document.getElementById("player-modal").style.display="none"
-}
-
-/* LOAD PLAYERS */
-
-async function loadPlayers(){
-
-const container=document.getElementById("player-heads")
-container.innerHTML=""
-
-try{
-
-const res=await fetch("https://api.mcsrvstat.us/2/lowframe.modrinth.gg")
-const data=await res.json()
-
-if(data.players && data.players.online > 0 && data.players.list){
-
-data.players.list.forEach(name=>{
-
-const img=document.createElement("img")
-img.src=`https://mc-heads.net/avatar/${name}/64`
-img.className="player-head"
-img.onclick=()=>openPlayer(name)
-
-container.appendChild(img)
-
-})
-
-}else{
-
-container.innerHTML="<p class='text-gray-400'>No players online</p>"
-
-}
-
-}catch(e){
-console.log(e)
-}
-
-}
-
-/* SERVER STATUS */
-
-async function updateServer(){
-
-try{
-
-const res=await fetch("https://api.mcsrvstat.us/2/lowframe.modrinth.gg")
-const data=await res.json()
-
-if(data.online){
-
-document.getElementById("status-motd").textContent=
-data.motd.clean.join(" ")
-
-document.getElementById("status-players").textContent=
-data.players.online
-
-}
-
-loadPlayers()
-
-}catch{
-document.getElementById("status-motd").textContent="Status Error"
-}
-
-}
-
-updateServer()
-setInterval(updateServer,30000)
-
+/* (Script remains unchanged) */
+const staffData={"TheRealDwayne":{rank:"owner",joined:"2025-01-12",playtime:"120h"},"daduckmanyt":{rank:"coowner",joined:"2025-01-12",playtime:"95h"},"FramantedApple":{rank:"admin",joined:"2025-02-02",playtime:"80h"},"TheAmazingDoge":{rank:"admin",joined:"2025-02-08",playtime:"72h"}};function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500)}function copyIP(){navigator.clipboard.writeText("lowframe.modrinth.gg:14416");toast("Copied Server IP")}function openTrailer(){document.getElementById("trailer-modal").style.display="flex"}function closeTrailer(){document.getElementById("trailer-modal").style.display="none"}function rankBadge(rank){if(rank==="owner") return '<span class="badge owner">OWNER</span>';if(rank==="coowner") return '<span class="badge coowner">CO-OWNER</span>';if(rank==="admin") return '<span class="badge admin">ADMIN</span>';return ""}function openPlayer(name){const data=staffData[name]||{joined:"Unknown",playtime:"Unknown",rank:""};document.getElementById("modal-name").textContent=name;document.getElementById("modal-join").textContent=data.joined;document.getElementById("modal-time").textContent=data.playtime;document.getElementById("modal-badge").innerHTML=rankBadge(data.rank);document.getElementById("player-modal").style.display="flex"}function closeModal(){document.getElementById("player-modal").style.display="none"}async function loadPlayers(){const container=document.getElementById("player-heads");container.innerHTML="";try{const res=await fetch("https://api.mcsrvstat.us/2/lowframe.modrinth.gg");const data=await res.json();if(data.players && data.players.online > 0 && data.players.list){data.players.list.forEach(name=>{const img=document.createElement("img");img.src=`https://mc-heads.net/avatar/${name}/64`;img.className="player-head";img.onclick=()=>openPlayer(name);container.appendChild(img)})}else{container.innerHTML="<p class='text-gray-400'>No players online</p>"}}catch(e){console.log(e)}}async function updateServer(){try{const res=await fetch("https://api.mcsrvstat.us/2/lowframe.modrinth.gg");const data=await res.json();if(data.online){document.getElementById("status-motd").textContent=data.motd.clean.join(" ");document.getElementById("status-players").textContent=data.players.online}loadPlayers()}catch{document.getElementById("status-motd").textContent="Status Error"}}updateServer();setInterval(updateServer,30000)
 </script>
 
 </body>
